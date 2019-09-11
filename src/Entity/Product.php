@@ -37,15 +37,20 @@ class Product
      */
     private $isTop;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
+     */
+    private $category;
+
     public function __construct()
 	{
 		$this->isTop = false;
 	}
 
 	public function getId(): ?int
-    {
-        return $this->id;
-    }
+             {
+                 return $this->id;
+             }
 
     public function getName(): ?string
     {
@@ -91,6 +96,18 @@ class Product
     public function setIsTop(bool $isTop): self
     {
         $this->isTop = $isTop;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
