@@ -34,6 +34,11 @@ class User implements UserInterface
      */
     private $password;
 
+	/**
+	 * @var string|null
+	 */
+    private $plainPassword;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -162,4 +167,20 @@ class User implements UserInterface
 
         return $this;
     }
+
+	/**
+	 * @return string
+	 */
+	public function getPlainPassword(): ?string
+	{
+		return $this->plainPassword;
+	}
+
+	/**
+	 * @param string $plainPassword
+	 */
+	public function setPlainPassword(?string $plainPassword): void
+	{
+		$this->plainPassword = $plainPassword;
+	}
 }
