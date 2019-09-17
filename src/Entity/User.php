@@ -63,7 +63,22 @@ class User implements UserInterface
      */
     private $address;
 
-    public function getId(): ?int
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    private $isEmailChecked;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $emailCheckCode;
+
+	public function __construct()
+	{
+		$this->isEmailChecked = false;
+	}
+
+	public function getId(): ?int
     {
         return $this->id;
     }
@@ -165,6 +180,11 @@ class User implements UserInterface
         return $this;
     }
 
+	public function getFullName(): string
+	{
+		return $this->firstName . ' ' . $this->lastName;
+	}
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -192,4 +212,28 @@ class User implements UserInterface
 	{
 		$this->plainPassword = $plainPassword;
 	}
+
+    public function getIsEmailChecked(): ?bool
+    {
+        return $this->isEmailChecked;
+    }
+
+    public function setIsEmailChecked(bool $isEmailChecked): self
+    {
+        $this->isEmailChecked = $isEmailChecked;
+
+        return $this;
+    }
+
+    public function getEmailCheckCode(): ?string
+    {
+        return $this->emailCheckCode;
+    }
+
+    public function setEmailCheckCode(?string $emailCheckCode): self
+    {
+        $this->emailCheckCode = $emailCheckCode;
+
+        return $this;
+    }
 }
