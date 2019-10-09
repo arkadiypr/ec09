@@ -38,3 +38,9 @@ services:
         arguments: [~, App\Entity\Product, ~]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Товары }
+
+    admin.users:
+        class: App\Admin\UserAdmin
+        arguments: [~, App\Entity\User, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Пользователи }
