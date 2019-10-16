@@ -35,4 +35,17 @@ class OrderController extends AbstractController
 
 	}
 
+	/**
+	 * @Route("/cart", name="order_cart")
+	 */
+	public function cart(OrderService $orderService)
+	{
+		$order = $orderService->getOrder();
+
+		return $this->render('order/cart.html.twig', [
+			'order' => $order
+		]);
+
+	}
+
 }
