@@ -97,4 +97,13 @@ class OrderService
 
 	}
 
+	public function deleteItem(OrderItem $item)
+	{
+		$order = $item->getCart();
+		$order->removeItem($item);
+		$this->entityManager->remove($item);
+		$this->save($order);
+		
+	}
+
 }

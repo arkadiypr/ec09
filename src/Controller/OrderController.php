@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Service\OrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,6 +45,42 @@ class OrderController extends AbstractController
 
 		return $this->render('order/cart.html.twig', [
 			'order' => $order
+		]);
+
+	}
+
+	/**
+	 * @Route("/cart/{id}/count", name="order_set_count")
+	 */
+	public function setCount(OrderItem $item, OrderService $orderService, Request $request)
+	{
+		$count = $request->request->getInt('count');
+		$order = $orderService->getOrder();
+
+		if ($count >0 && $item->getCart() == $order) {
+			$item->setCount($count);
+			$orderService->save($item->getCart());
+		}
+
+		return $this->render('order/_cart_table.html.twig', [
+			'order' => $order,
+		]);
+
+	}
+
+	/**
+	 * @Route("/cart/{id}/delete", name="order_delete_item")
+	 */
+	public function deleteItem(OrderItem $item, OrderService $orderService)
+	{
+		$order = $orderService->getOrder();
+
+		if ($item->getCart() === $order) {
+			$orderService->deleteItem($item);
+		}
+
+		return $this->render('order/_cart_table.html.twig', [
+			'order' => $order,
 		]);
 
 	}
