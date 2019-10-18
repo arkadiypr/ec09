@@ -12,6 +12,7 @@ namespace App\Service;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
+use App\Entity\User;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -58,7 +59,7 @@ class OrderService
 		return $order;
 	}
 
-	public function add(Product $product, int $count): Order
+	public function add(Product $product, int $count, ?User $user): Order
 	{
 		$order = $this->getOrder();
 
@@ -82,14 +83,18 @@ class OrderService
 
 		}
 
-		$this->save($order);
+		$this->save($order, $user);
 
 		return $order;
 
 	}
 
-	public function save(Order $order)
+	public function save(Order $order, ?User $user = null)
 	{
+		if ($user) {
+			$order->setUser($user);
+		}
+
 		$this->entityManager->persist($order);
 		$this->entityManager->flush();
 

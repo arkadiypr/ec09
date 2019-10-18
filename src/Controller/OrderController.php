@@ -16,7 +16,7 @@ class OrderController extends AbstractController
 	 */
 	public function addToCart(Product $product, OrderService $orderService, Request $request)
 	{
-		$orderService->add($product, 1);
+		$orderService->add($product, 1, $this->getUser());
 
 		if ($request->isXmlHttpRequest()) {
 			return $this->headerCart($orderService);
@@ -59,7 +59,7 @@ class OrderController extends AbstractController
 
 		if ($count >0 && $item->getCart() == $order) {
 			$item->setCount($count);
-			$orderService->save($item->getCart());
+			$orderService->save($item->getCart(), $this->getUser());
 		}
 
 		return $this->render('order/_cart_table.html.twig', [
