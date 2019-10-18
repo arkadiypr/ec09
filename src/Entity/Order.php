@@ -62,6 +62,7 @@ class Order
 
 	/**
 	 * @ORM\Column(type="string", length=1000, nullable=true)
+ 	 * @Assert\NotBlank()
 	 */
 	private $address;
 
