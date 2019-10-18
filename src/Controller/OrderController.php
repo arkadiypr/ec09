@@ -89,16 +89,31 @@ class OrderController extends AbstractController
 	/**
 	 * @Route("/cart/order", name="order_make_order")
 	 */
-	public function makeOrder(OrderService $orderService)
+	public function makeOrder(OrderService $orderService, Request $request)
 	{
 		$order = $orderService->getOrder();
 		$form = $this->createForm(OrderType::class, $order);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$orderService->makeOrder($order);
+
+			return $this->redirectToRoute('order_success');
+		}
 
 		return $this->render('order/make_order.html.twig', [
 			'order' => $order,
 			'form' => $form->createView()
 	]);
 
+	}
+
+	/**
+	 * @Route("/order/success", name="order_success")
+	 */
+	public function orderSuccess()
+	{
+		return $this->render('order/success.html.twig');
 	}
 
 }

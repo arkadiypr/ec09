@@ -111,4 +111,11 @@ class OrderService
 		
 	}
 
+	public function makeOrder(Order $order)
+	{
+		$order->setOrderedAt(new \DateTime());
+		$this->save($order);
+		$this->sessions->remove(self::SESSION_KEY);
+	}
+
 }
