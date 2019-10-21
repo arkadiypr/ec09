@@ -2,6 +2,7 @@
 
 namespace App\Admin;
 
+use App\Form\MoneyTransformer;
 use Doctrine\ORM\QueryBuilder;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -18,7 +19,9 @@ class OrderAdmin extends AbstractAdmin
 			->addIdentifier('firstName')
 			->addIdentifier('lastName')
 			->addIdentifier('email')
-			->addIdentifier('amount');
+			->add('amount', null, [
+				'template' => 'admin/order/_list_amount.html.twig'
+			]);
 	}
 
 	protected function configureDatagridFilters(DatagridMapper $filter)
@@ -29,7 +32,6 @@ class OrderAdmin extends AbstractAdmin
 			->add('lastName')
 			->add('email')
 			->add('amount');
-
 	}
 
 	protected function configureFormFields(FormMapper $form)
@@ -39,7 +41,9 @@ class OrderAdmin extends AbstractAdmin
 			->add('lastName')
 			->add('email')
 			->add('address')
-			->add('amount');;
+			->add('amount');
+
+		$form->get('amount')->addModelTransformer(new MoneyTransformer());
 	}
 
 	public function createQuery($context = 'list')

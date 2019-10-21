@@ -5,7 +5,7 @@
                 <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
             </div>
             <div class="card-body">
-                <h1 class="card-title pricing-card-title">{{ product.price / 100 }} грн.</h1>
+                <h1 class="card-title pricing-card-title">{{ product.price | money }} грн.</h1>
                 {{ product.description }}
                 <a class="btn btn-lg btn-block btn-outline-primary" href="{{ path('product', {'id': product.id}) }}">Подробнее</a>
                 <a class="btn btn-lg btn-block btn-outline-primary js-add-to-cart" href="{{ path('order_add_to_cart', {'id': product.id}) }}">
