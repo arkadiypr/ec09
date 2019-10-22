@@ -42,7 +42,12 @@ class OrderAdmin extends AbstractAdmin
 			->add('lastName')
 			->add('email')
 			->add('address')
-			->add('amount')
+			->add('amount', null,
+				[
+					'attr' => [
+						'readonly' => true
+					]
+				])
 		    ->add('items',
 				CollectionType::class,
 				[

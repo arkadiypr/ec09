@@ -13,7 +13,12 @@ class OrderItemAdmin extends AbstractAdmin
 	{
 		$form
 			->add('product')
-			->add('price')
+			->add('price', null,
+				[
+					'attr' => [
+						'readonly' => true
+					]
+				])
 			->add('count')
 //			->add('amount')
 			;
