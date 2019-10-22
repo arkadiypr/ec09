@@ -2,29 +2,32 @@
 
 namespace App\Admin;
 
-
 use App\Form\MoneyTransformer;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Form\FormMapper;
 
 class OrderItemAdmin extends AbstractAdmin
 {
-	public function configureFormFields(FormMapper $form)
+
+	protected function configureFormFields(FormMapper $form)
 	{
 		$form
 			->add('product')
-			->add('price', null,
-				[
-					'attr' => [
-						'readonly' => true
-					]
-				])
-			->add('count')
-//			->add('amount')
-			;
+			->add('price', null, [
+				'attr' => [
+					'readonly' => true,
+					'class' => 'js-update-amount',
+				],
+			])
+			->add('count', null, [
+				'attr' => [
+					'class' => 'js-update-amount',
+				]
+			])
+			//->add('amount')
+		;
 
 		$form->get('price')->addModelTransformer(new MoneyTransformer());
-
 	}
 
 }

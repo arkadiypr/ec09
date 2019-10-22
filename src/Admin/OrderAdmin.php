@@ -10,42 +10,47 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\Form\Type\CollectionType;
 
-
 class OrderAdmin extends AbstractAdmin
 {
+
 	protected function configureListFields(ListMapper $list)
 	{
-		$list->addIdentifier('id')
+		$list
+			->addIdentifier('id')
 			->addIdentifier('orderedAt')
 			->addIdentifier('firstName')
 			->addIdentifier('lastName')
 			->addIdentifier('email')
 			->add('amount', null, [
 				'template' => 'admin/order/_list_amount.html.twig'
-			]);
+			])
+		;
 	}
 
 	protected function configureDatagridFilters(DatagridMapper $filter)
 	{
-		$filter->add('id')
+		$filter
+			->add('id')
 			->add('orderedAt')
 			->add('firstName')
 			->add('lastName')
 			->add('email')
-			->add('amount');
+			->add('amount')
+		;
 	}
 
 	protected function configureFormFields(FormMapper $form)
 	{
-		$form->add('orderedAt')
+		$form
+			->add('orderedAt')
 			->add('firstName')
 			->add('lastName')
 			->add('email')
 			->add('address')
-			->add('amount', null,
-				[
-					'attr' => [
-						'readonly' => true
+			->add('amount', null, [
+				'attr' => [
+					'readonly' => true,
+					'class' => 'js-amount'
 					]
 				])
 		    ->add('items',
