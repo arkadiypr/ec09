@@ -8,6 +8,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\Form\Type\CollectionType;
 
 
 class OrderAdmin extends AbstractAdmin
@@ -41,7 +42,16 @@ class OrderAdmin extends AbstractAdmin
 			->add('lastName')
 			->add('email')
 			->add('address')
-			->add('amount');
+			->add('amount')
+		    ->add('items',
+				CollectionType::class,
+				[
+					'by_reference' => false
+				],
+				[
+					'edit' => 'inline',
+					'inline' => 'table'
+				]);
 
 		$form->get('amount')->addModelTransformer(new MoneyTransformer());
 	}
