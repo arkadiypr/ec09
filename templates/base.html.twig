@@ -30,9 +30,9 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Каталог
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {{ render(controller('App\\Controller\\CategoryController::headerList')) }}
-                    </div>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('contact') }}">Контакты!</a>
