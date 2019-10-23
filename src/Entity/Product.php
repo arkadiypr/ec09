@@ -49,22 +49,28 @@ class Product
      */
     private $orderItems;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AttributeValue", mappedBy="product", orphanRemoval=true)
+     */
+    private $attributeValues;
+
     public function __construct()
 	{
 		$this->isTop = false;
   $this->orderItems = new ArrayCollection();
+  $this->attributeValues = new ArrayCollection();
 	}
 
 	public function __toString()
-	{
-		return $this->getName();
-	}
+               	{
+               		return $this->getName();
+               	}
 
 
 	public function getId(): ?int
-                                  {
-                                      return $this->id;
-                                  }
+                                                 {
+                                                     return $this->id;
+                                                 }
 
     public function getName(): ?string
     {
@@ -151,6 +157,37 @@ class Product
             // set the owning side to null (unless already changed)
             if ($orderItem->getProduct() === $this) {
                 $orderItem->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AttributeValue[]
+     */
+    public function getAttributeValues(): Collection
+    {
+        return $this->attributeValues;
+    }
+
+    public function addAttributeValue(AttributeValue $attributeValue): self
+    {
+        if (!$this->attributeValues->contains($attributeValue)) {
+            $this->attributeValues[] = $attributeValue;
+            $attributeValue->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttributeValue(AttributeValue $attributeValue): self
+    {
+        if ($this->attributeValues->contains($attributeValue)) {
+            $this->attributeValues->removeElement($attributeValue);
+            // set the owning side to null (unless already changed)
+            if ($attributeValue->getProduct() === $this) {
+                $attributeValue->setProduct(null);
             }
         }
 

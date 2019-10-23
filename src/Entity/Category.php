@@ -39,10 +39,16 @@ class Category
      */
     private $subcategories;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Attribute", mappedBy="category", orphanRemoval=true)
+     */
+    private $attributes;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->subcategories = new ArrayCollection();
+        $this->attributes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,9 +100,9 @@ class Category
     }
 
 	public function __toString()
-                        	{
-                        		return (string)$this->getName();
-                        	}
+                                       	{
+                                       		return (string)$this->getName();
+                                       	}
 
     public function getParent(): ?self
     {
@@ -135,6 +141,37 @@ class Category
             // set the owning side to null (unless already changed)
             if ($subcategory->getParent() === $this) {
                 $subcategory->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Attribute[]
+     */
+    public function getAttributes(): Collection
+    {
+        return $this->attributes;
+    }
+
+    public function addAttribute(Attribute $attribute): self
+    {
+        if (!$this->attributes->contains($attribute)) {
+            $this->attributes[] = $attribute;
+            $attribute->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttribute(Attribute $attribute): self
+    {
+        if ($this->attributes->contains($attribute)) {
+            $this->attributes->removeElement($attribute);
+            // set the owning side to null (unless already changed)
+            if ($attribute->getCategory() === $this) {
+                $attribute->setCategory(null);
             }
         }
 
