@@ -3,7 +3,7 @@
 window.addEventListener('load', () => {
 	let container, amountElement;
 
-	container = document.getElementsByClassName('js-update-amount').item(0).closest('.sonata-ba-field-inline-table');
+	container = document.querySelector('.form-group[id$="_items"]');
 	amountElement = document.querySelector('.js-amount');
 
 	if (container) {

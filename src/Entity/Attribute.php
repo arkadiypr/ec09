@@ -44,7 +44,13 @@ class Attribute
         $this->attributeValues = new ArrayCollection();
     }
 
-    public function getId(): ?int
+	public function __toString()
+	{
+		return (string)$this->name;
+	}
+
+
+	public function getId(): ?int
     {
         return $this->id;
     }
