@@ -53,6 +53,7 @@ window.addEventListener('load', () => {
         let attributeId = attributeSelect.selectedOptions.item(0).value; // получает айди текущего атрибута
         let row = attributeSelect.closest('tr');// ищем строку, в которой находится текущий атрибут и его значения
         let valueSelect = row.querySelector('select.js-product-attribute-value');// находим селект со значениями
+        let selectedIndex = valueSelect.selectedIndex;
 
         valueSelect.innerHTML = ''; // очищаем список опций селекта
 
@@ -64,6 +65,8 @@ window.addEventListener('load', () => {
                 valueSelect.add(option); // добавляем в select
             }
         });
+
+        valueSelect.selectedIndex = selectedIndex;
 
         $(valueSelect).trigger('change'); // запускаем собітие изменения селекта для обновления опций в select2
     }
