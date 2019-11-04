@@ -34,7 +34,11 @@ class ProductAdmin extends AbstractAdmin
 	protected function configureFormFields(FormMapper $form)
 	{
 		$form->add('name')
-			->add('category')
+			->add('category', null, [
+				'attr' => [
+					'class' => 'js-product-category',
+				]
+			])
 			->add('price')
 			->add('description')
 			->add('isTop')

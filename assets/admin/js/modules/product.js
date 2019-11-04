@@ -3,6 +3,7 @@
 window.addEventListener('load', () => {
     let container;
     let attributeValues = null;
+    let attributeSelects;
 
     // получаем таблицу с атрибутами
     container = document.querySelector('.form-group[id$="_attributeValues"]');
@@ -22,6 +23,18 @@ window.addEventListener('load', () => {
                 filterAttributeValues(event.target); // фильтруем список значений атрибута
             }
         });
+
+        $('.js-product-category').on('change', (event) => {
+            event.target.form.submit();
+        });
+
+        attributeSelects = container.querySelectorAll('select.js-product-attribute');
+
+        if (attributeSelects) {
+            attributeSelects.forEach((select) => {
+                filterAttributeValues(select);
+            });
+        }
     }
 
     function initAttributeValues() { // получаем список возможных значений
