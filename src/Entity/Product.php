@@ -54,23 +54,29 @@ class Product
      */
     private $attributeValues;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="products")
+     */
+    private $categories;
+
     public function __construct()
 	{
 		$this->isTop = false;
   $this->orderItems = new ArrayCollection();
   $this->attributeValues = new ArrayCollection();
+  $this->categories = new ArrayCollection();
 	}
 
 	public function __toString()
-               	{
-               		return $this->getName();
-               	}
+                              	{
+                              		return $this->getName();
+                              	}
 
 
 	public function getId(): ?int
-                                                 {
-                                                     return $this->id;
-                                                 }
+                                                                {
+                                                                    return $this->id;
+                                                                }
 
     public function getName(): ?string
     {
@@ -189,6 +195,32 @@ class Product
             if ($attributeValue->getProduct() === $this) {
                 $attributeValue->setProduct(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
         }
 
         return $this;
