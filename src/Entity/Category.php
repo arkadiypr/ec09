@@ -44,6 +44,11 @@ class Category
      */
     private $products;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $comfyId;
+
     public function __construct()
     {
         $this->subcategories = new ArrayCollection();
@@ -69,9 +74,9 @@ class Category
     }
 
 	public function __toString()
-                                                               	{
-                                                               		return (string)$this->getName();
-                                                               	}
+                                                                        	{
+                                                                        		return (string)$this->getName();
+                                                                        	}
 
     public function getParent(): ?self
     {
@@ -171,6 +176,18 @@ class Category
             $this->products->removeElement($product);
             $product->removeCategory($this);
         }
+
+        return $this;
+    }
+
+    public function getComfyId(): ?int
+    {
+        return $this->comfyId;
+    }
+
+    public function setComfyId(?int $comfyId): self
+    {
+        $this->comfyId = $comfyId;
 
         return $this;
     }

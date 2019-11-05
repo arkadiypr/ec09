@@ -59,6 +59,11 @@ class Product
      */
     private $categories;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $comfyId;
+
     public function __construct()
 	{
 		$this->isTop = false;
@@ -68,15 +73,15 @@ class Product
 	}
 
 	public function __toString()
-                              	{
-                              		return $this->getName();
-                              	}
+                                       	{
+                                       		return $this->getName();
+                                       	}
 
 
 	public function getId(): ?int
-                                                                {
-                                                                    return $this->id;
-                                                                }
+                                                                         {
+                                                                             return $this->id;
+                                                                         }
 
     public function getName(): ?string
     {
@@ -222,6 +227,18 @@ class Product
         if ($this->categories->contains($category)) {
             $this->categories->removeElement($category);
         }
+
+        return $this;
+    }
+
+    public function getComfyId(): ?int
+    {
+        return $this->comfyId;
+    }
+
+    public function setComfyId(?int $comfyId): self
+    {
+        $this->comfyId = $comfyId;
 
         return $this;
     }
