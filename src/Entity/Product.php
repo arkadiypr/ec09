@@ -64,24 +64,30 @@ class Product
      */
     private $comfyId;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductImage", mappedBy="product", orphanRemoval=true)
+     */
+    private $images;
+
     public function __construct()
 	{
 		$this->isTop = false;
   $this->orderItems = new ArrayCollection();
   $this->attributeValues = new ArrayCollection();
   $this->categories = new ArrayCollection();
+  $this->images = new ArrayCollection();
 	}
 
 	public function __toString()
-                                       	{
-                                       		return $this->getName();
-                                       	}
+                                                      	{
+                                                      		return $this->getName();
+                                                      	}
 
 
 	public function getId(): ?int
-                                                                         {
-                                                                             return $this->id;
-                                                                         }
+                                                                                        {
+                                                                                            return $this->id;
+                                                                                        }
 
     public function getName(): ?string
     {
@@ -239,6 +245,37 @@ class Product
     public function setComfyId(?int $comfyId): self
     {
         $this->comfyId = $comfyId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductImage[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(ProductImage $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(ProductImage $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
+            }
+        }
 
         return $this;
     }
