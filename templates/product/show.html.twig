@@ -3,6 +3,9 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
+    {% if not product.images.empty %}
+        <img src="{{ vich_uploader_asset(product.images.first, 'image') }}" alt="{{ product.name }}">
+    {% endif %}
     <h1>{{ product.name }}</h1>
     <p>{{ product.price / 100 }}</p>
     <p>{{ product.description }}</p>

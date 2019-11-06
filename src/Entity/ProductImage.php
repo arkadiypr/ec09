@@ -69,7 +69,7 @@ class ProductImage
         return $this->fileName;
     }
 
-    public function setFileName(string $fileName): self
+    public function setFileName(?string $fileName): self
     {
         $this->fileName = $fileName;
 
@@ -81,7 +81,7 @@ class ProductImage
         return $this->originalFileName;
     }
 
-    public function setOriginalFileName(string $originalFileName): self
+    public function setOriginalFileName(?string $originalFileName): self
     {
         $this->originalFileName = $originalFileName;
 
@@ -93,7 +93,7 @@ class ProductImage
         return $this->mimeType;
     }
 
-    public function setMimeType(string $mimeType): self
+    public function setMimeType(?string $mimeType): self
     {
         $this->mimeType = $mimeType;
 
