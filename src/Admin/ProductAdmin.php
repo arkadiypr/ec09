@@ -42,6 +42,17 @@ class ProductAdmin extends AbstractAdmin
 			->add('price')
 			->add('description')
 			->add('isTop')
+			->add(
+				'images',
+				CollectionType::class,
+				[
+					'by_reference' => false
+				],
+				[
+					'edit' => 'inline',
+					'inline' => 'table',
+				]
+			)
 			->add('attributeValues',
 				CollectionType::class,
 				[

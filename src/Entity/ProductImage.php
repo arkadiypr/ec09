@@ -34,7 +34,7 @@ class ProductImage
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $originalFilename;
+    private $originalFileName;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -42,7 +42,7 @@ class ProductImage
     private $mimeType;
 
 	/**
-	 * @var File
+	 * @var File|null
 	 * @Vich\UploadableField(mapping="products", fileNameProperty="filename", originalName="originalFilename", mimeType="mimeType")
 	 */
     private $image;
@@ -76,14 +76,14 @@ class ProductImage
         return $this;
     }
 
-    public function getOriginalFilename(): ?string
+    public function getOriginalFileName(): ?string
     {
-        return $this->originalFilename;
+        return $this->originalFileName;
     }
 
-    public function setOriginalFilename(string $originalFilename): self
+    public function setOriginalFileName(string $originalFileName): self
     {
-        $this->originalFilename = $originalFilename;
+        $this->originalFileName = $originalFileName;
 
         return $this;
     }
@@ -99,4 +99,21 @@ class ProductImage
 
         return $this;
     }
+
+	/**
+	 * @return File
+	 */
+	public function getImage(): ?File
+	{
+		return $this->image;
+	}
+
+	/**
+	 * @param File $image
+	 */
+	public function setImage(?File $image): void
+	{
+		$this->image = $image;
+	}
+
 }
