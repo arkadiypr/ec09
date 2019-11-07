@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\ProductImage;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -109,6 +110,9 @@ class LoadProductsCommand extends Command
 
 	private function processCategories(Product $product, array $item)
 	{
+		/**
+		 * @var CategoryRepository $categoryRepo
+		 */
 		$categoryRepo = $this->entityManager->getRepository(Category::class);
 
 		foreach ($item['CategoryIds'] as $index => $categoryId) {
