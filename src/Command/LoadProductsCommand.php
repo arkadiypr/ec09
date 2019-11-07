@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use App\Entity\ProductImage;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -12,6 +13,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class LoadProductsCommand extends Command
 {
@@ -22,11 +25,21 @@ class LoadProductsCommand extends Command
 	 */
     private $entityManager;
 
-	public function __construct(EntityManagerInterface $entityManager)
+	/**
+	 * @var string
+	 */
+    private $tempDir;
+
+	public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $parameterBag)
 	{
 		parent::__construct();
 
 		$this->entityManager = $entityManager;
+		$this->tempDir = $parameterBag->get('kernel.cache_dir') . '/images';
+
+		if (!file_exists($this->tempDir)) {
+			mkdir($this->tempDir);
+		}
 	}
 
 
@@ -66,6 +79,26 @@ class LoadProductsCommand extends Command
 		    $product->setDescription($item['Description']);
 		    $product->setPrice($item['Price'] * 100);
 		    $this->processCategories($product, $item);
+
+		    if (isset($item['PictureUrl'])) {
+		    	$image = $product->getImages()->first();
+
+			    if (!$image) {
+			    	$image = new ProductImage();
+			    	$product->addImage($image);
+
+			    	$imageContent = file_get_contents($item['PictureUrl']);
+			    	$imageFileName = basename($item['PictureUrl']);
+			    	$imagePath = $this->tempDir . '/' . $imageFileName;
+			    	file_put_contents($imagePath, $imageContent);
+
+			    	$uploadedImage = new UploadedFile($imagePath, $imageFileName, mime_content_type($imagePath), null, true);
+
+			    	$image->setImage($uploadedImage);
+				    $this->entityManager->persist($image);
+
+			    }
+		    }
 
 	    }
 
