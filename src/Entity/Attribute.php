@@ -42,6 +42,7 @@ class Attribute
     public function __construct()
     {
         $this->attributeValues = new ArrayCollection();
+        $this->valuesList = [];
     }
 
 	public function __toString()

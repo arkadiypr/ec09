@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "liip/imagine-bundle": "^2.2",
+        "rct567/dom-query": "^0.8.0",
         "sensio/framework-extra-bundle": "^5.1",
         "sonata-project/admin-bundle": "^3.53",
         "sonata-project/doctrine-orm-admin-bundle": "^3.10",
