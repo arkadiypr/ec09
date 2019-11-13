@@ -9,4 +9,5 @@ input.cart-item-count {
 
 .card-deck .card {
     min-width: 20%;
+    max-width: 30%;
 }
