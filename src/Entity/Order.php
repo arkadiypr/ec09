@@ -71,6 +71,11 @@ class Order
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $paidAt;
+
 
     public function __construct()
     {
@@ -154,19 +159,19 @@ class Order
     }
 
 	public function updateAmount()
-	{
-		$amount = 0;
-		$count = 0;
-
-		foreach ($this->getItems() as $item) {
-			$amount += $item->getAmount();
-			$count += $item->getCount();
-		}
-
-		$this->setAmount($amount);
-		$this->setCount($count);
-
-	}
+         	{
+         		$amount = 0;
+         		$count = 0;
+         
+         		foreach ($this->getItems() as $item) {
+         			$amount += $item->getAmount();
+         			$count += $item->getCount();
+         		}
+         
+         		$this->setAmount($amount);
+         		$this->setCount($count);
+         
+         	}
 
     public function getFirstName(): ?string
     {
@@ -193,9 +198,9 @@ class Order
     }
 
 	public function getFullName(): string
-	{
-		return $this->firstName . ' ' . $this->lastName;
-	}
+         	{
+         		return $this->firstName . ' ' . $this->lastName;
+         	}
 
     public function getEmail(): ?string
     {
@@ -233,6 +238,18 @@ class Order
         $this->lastName = $user->getLastName();
         $this->email = $user->getEmail();
         $this->address = $user->getAddress();
+
+        return $this;
+    }
+
+    public function getPaidAt(): ?\DateTimeInterface
+    {
+        return $this->paidAt;
+    }
+
+    public function setPaidAt(?\DateTimeInterface $paidAt): self
+    {
+        $this->paidAt = $paidAt;
 
         return $this;
     }

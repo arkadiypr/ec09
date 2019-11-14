@@ -2,13 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Form\OrderType;
 use App\Service\OrderService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use WayForPay\SDK\Collection\ProductCollection;
+use WayForPay\SDK\Credential\AccountSecretCredential;
+use WayForPay\SDK\Domain\Client;
+use WayForPay\SDK\Exception\ApiException;
+use WayForPay\SDK\Wizard\CheckWizard;
+use WayForPay\SDK\Wizard\PurchaseWizard;
+use WayForPay\SDK\Domain\Product as WayForPayProduct;
 
 class OrderController extends AbstractController
 {
@@ -98,7 +108,7 @@ class OrderController extends AbstractController
 		if ($form->isSubmitted() && $form->isValid()) {
 			$orderService->makeOrder($order);
 
-			return $this->redirectToRoute('order_success');
+			return $this->redirectToRoute('order_success', ['id' => $order->getId()]);
 		}
 
 		return $this->render('order/make_order.html.twig', [
@@ -109,11 +119,83 @@ class OrderController extends AbstractController
 	}
 
 	/**
-	 * @Route("/order/success", name="order_success")
+	 * @Route("/order/success/{id}", name="order_success")
 	 */
-	public function orderSuccess()
+	public function orderSuccess(Order $order)
 	{
-		return $this->render('order/success.html.twig');
+		$form = $this->createPaymentForm($order);
+
+
+		return $this->render('order/success.html.twig', [
+			'form' => $form
+		]);
+	}
+
+	private function createPaymentForm(Order $order)
+	{
+//		$credential = new AccountSecretTestCredential();
+
+		$credential = new AccountSecretCredential($_ENV['WAYFORPAY_ACCOUNT'], $_ENV['WAYFORPAY_SECRET']);
+
+		$productCollection = new ProductCollection();
+
+		foreach ($order->getItems() as $item) {
+			$productCollection->add(new WayForPayProduct($item->getName(), $item->getPrice() / 100, $item->getAmount()));
+		}
+
+		$form = PurchaseWizard::get($credential)
+			->setOrderReference($order->getId() .'_' . time())
+			->setAmount($order->getAmount() / 100)
+			->setCurrency('UAH')
+			->setOrderDate($order->getOrderedAt())
+			->setMerchantDomainName($this->generateUrl('default', [], UrlGeneratorInterface::ABSOLUTE_URL))
+			->setClient(new Client(
+				$order->getFirstName(),
+				$order->getLastName(),
+				$order->getEmail(),
+				null,
+				null,
+				$order->getUser() ? $order->getUser()->getId() : null,
+				$order->getAddress()
+			))
+			->setProducts($productCollection)
+			->setReturnUrl($this->generateUrl('order_payment', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL))
+			->getForm()
+			->getAsString('Оплатить');
+		return $form;
+	}
+
+	/**
+	 * @Route("/order/payment/{id}", name="order_payment"))
+	 */
+	public function payment(Order $order, Request $request, EntityManagerInterface $entityManager)
+	{
+
+		$credential = new AccountSecretCredential($_ENV['WAYFORPAY_ACCOUNT'], $_ENV['WAYFORPAY_SECRET']);
+
+		try {
+			$response = CheckWizard::get($credential)
+				->setOrderReference($request->request->get('orderReference'))
+				->getRequest()
+				->send();
+		} catch (ApiException $exception) {
+			$error = $exception->getMessage();
+			$response = null;
+		}
+
+
+		if ($response && $response->getReason()->isOK()) {
+			$order->setPaidAt(new \DateTime());
+			$entityManager->flush();
+			$error = null;
+		} else {
+			$error = $error ?? $response->getReason()->getMessage();
+		}
+
+		return $this->render('order/payment_status.html.twig', [
+			'order' => $order,
+			'error' => $error
+		]);
 	}
 
 }
